@@ -1,0 +1,17 @@
+type: object
+properties:
+  error:
+    type: string
+    example: "FORBIDDEN"
+  code:
+    type: integer
+    example: 403
+  message:
+    type: string
+    example: "Доступ запрещен"
+  details:
+    type: array
+    items:
+      type: string
+  request_id:
+    type: string

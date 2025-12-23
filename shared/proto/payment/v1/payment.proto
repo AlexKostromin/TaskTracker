@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package payment.v1;
+
+
+option go_package = "hw1/shared/payment/v1;paymentV1";
+
+// PaymentService - сервис для обработки платежей
+service PaymentService {
+  // PayOrder - обработка оплаты заказа
+  rpc PayOrder(PayOrderRequest) returns (PayOrderResponse);
+}
+
+// PayOrderRequest - запрос на оплату заказа
+message PayOrderRequest {
+  // order_uuid - уникальный идентификатор заказа
+  string order_uuid = 1;
+  // user_uuid - уникальный идентификатор пользователя
+  string user_uuid = 2;
+  // payment_method - метод оплаты
+  PaymentMethod payment_method = 3;
+}
+
+// PaymentMethod - методы оплаты
+enum PaymentMethod {
+  PAYMENT_METHOD_UNSPECIFIED = 0;
+  PAYMENT_METHOD_CARD = 1;
+  PAYMENT_METHOD_SBP = 2;
+  PAYMENT_METHOD_CREDIT_CARD = 3;
+  PAYMENT_METHOD_INVESTOR_MONEY = 4;
+}
+
+// PayOrderResponse - ответ на запрос оплаты заказа
+message PayOrderResponse {
+  // transaction_uuid - уникальный идентификатор транзакции
+  string transaction_uuid = 1;
+}

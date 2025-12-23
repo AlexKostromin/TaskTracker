@@ -1,0 +1,126 @@
+syntax = "proto3";
+
+package inventory.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "hw1/shared/inventory/v1;inventoryV1";
+
+// InventoryService - сервис для управления инвентарем деталей
+service InventoryService {
+  // GetPart - получение детали по идентификатору
+  rpc GetPart(GetPartRequest) returns (GetPartResponse);
+  // ListParts - получение списка деталей с фильтрацией
+  rpc ListParts(ListPartsRequest) returns(ListPartsResponse);
+}
+
+// ListPartsRequest - запрос на получение списка деталей
+message ListPartsRequest {
+  // filter - критерии фильтрации деталей
+  PartsFilter filter = 1;
+}
+
+// PartsFilter - фильтр для поиска деталей
+message PartsFilter {
+  // uuids - фильтр по идентификаторам деталей
+  repeated string uuids = 1;
+  // names - фильтр по названиям деталей
+  repeated string names = 2;
+  // categories - фильтр по категориям деталей
+  repeated Category categories = 3;
+  // manufacturer_countries - фильтр по странам производителей
+  repeated string manufacturer_countries = 4;
+  // tags - фильтр по тегам деталей
+  repeated string tags = 5;
+}
+
+// ListPartsResponse - ответ со списком деталей
+message ListPartsResponse {
+  // parts - список найденных деталей
+  repeated Part parts = 1;
+}
+
+// GetPartRequest - запрос на получение детали
+message GetPartRequest {
+  // uuid - уникальный идентификатор детали
+  string uuid = 1;
+}
+
+// GetPartResponse - ответ с информацией о детали
+message GetPartResponse {
+  // part - запрошенная деталь
+  Part part = 1;
+}
+
+// Part - информация о детали инвентаря
+message Part {
+  // uuid - уникальный идентификатор детали
+  string uuid = 1;
+  // name - название детали
+  string name = 2;
+  // description - описание детали
+  string description = 3;
+  // price - цена детали
+  double price = 4;
+  // stock_quantity - количество на складе
+  int64 stock_quantity = 5;
+  // category - категория детали
+  Category category = 6;
+  // dimensions - габаритные размеры детали
+  Dimensions dimensions = 7;
+  // manufacturer - информация о производителе
+  Manufacturer manufacturer = 8;
+  // tags - теги для классификации детали
+  repeated string tags = 9;
+  // metadata - дополнительные метаданные детали
+  map<string, Value> metadata = 10;
+  // created_at - дата создания записи
+  google.protobuf.Timestamp created_at = 11;
+  // updated_at - дата последнего обновления записи
+  google.protobuf.Timestamp updated_at = 12;
+}
+
+// Category - категории деталей инвентаря
+enum Category {
+  CATEGORY_UNKNOWN = 0;  // ← Исправлено согласно заданию
+  CATEGORY_ENGINE = 1;
+  CATEGORY_FUEL = 2;
+  CATEGORY_PORTHOLE = 3;
+  CATEGORY_WING = 4;
+}
+
+// Dimensions - габаритные размеры детали
+message Dimensions {
+  // length - длина детали в сантиметрах ← Исправлено
+  double length = 1;
+  // width - ширина детали в сантиметрах ← Исправлено
+  double width = 2;
+  // height - высота детали в сантиметрах ← Исправлено
+  double height = 3;
+  // weight - вес детали в килограммах
+  double weight = 4;
+}
+
+// Manufacturer - информация о производителе детали
+message Manufacturer {
+  // name - название производителя
+  string name = 1;
+  // country - страна производителя
+  string country = 2;
+  // website - веб-сайт производителя
+  string website = 3;
+}
+
+// Value - универсальное значение для хранения различных типов данных в метаданных
+message Value {
+  oneof value {
+    // string_value - строковое значение
+    string string_value = 1;
+    // int64_value - целочисленное значение
+    int64 int64_value = 2;
+    // double_value - значение с плавающей точкой
+    double double_value = 3;
+    // bool_value - логическое значение
+    bool bool_value = 4;
+  }
+}

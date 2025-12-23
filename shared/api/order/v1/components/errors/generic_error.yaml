@@ -1,0 +1,23 @@
+type: object
+properties:
+  error:
+    type: string
+    description: Тип ошибки
+  code:
+    type: integer
+    description: HTTP статус код
+  message:
+    type: string
+    description: Сообщение об ошибке
+  details:
+    type: array
+    items:
+      type: string
+    description: Дополнительные детали ошибки
+  request_id:
+    type: string
+    description: Идентификатор запроса для отслеживания
+required:
+  - errors
+  - code
+  - message

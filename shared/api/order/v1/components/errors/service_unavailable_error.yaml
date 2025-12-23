@@ -1,0 +1,23 @@
+type: object
+properties:
+  error:
+    type: string
+    example: "SERVICE_UNAVAILABLE"
+  code:
+    type: integer
+    example: 503
+  message:
+    type: string
+    example: "Сервис временно недоступен"
+  service:
+    type: string
+    description: Название сервиса
+  retry_after:
+    type: integer
+    description: Время через которое можно повторить запрос (секунды)
+  details:
+    type: array
+    items:
+      type: string
+  request_id:
+    type: string

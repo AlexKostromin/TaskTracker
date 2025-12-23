@@ -1,0 +1,23 @@
+type: object
+properties:
+  error:
+    type: string
+    example: "BAD_GATEWAY"
+  code:
+    type: integer
+    example: 502
+  message:
+    type: string
+    example: "Ошибка взаимодействия с внешним сервисом"
+  service:
+    type: string
+    description: Название внешнего сервиса
+  operation:
+    type: string
+    description: Выполняемая операция
+  details:
+    type: array
+    items:
+      type: string
+  request_id:
+    type: string

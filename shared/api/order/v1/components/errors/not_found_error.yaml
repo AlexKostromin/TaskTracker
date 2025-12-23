@@ -1,0 +1,23 @@
+type: object
+properties:
+  error:
+    type: string
+    example: "NOT_FOUND"
+  code:
+    type: integer
+    example: 404
+  message:
+    type: string
+    example: "Ресурс не найден"
+  resource_type:
+    type: string
+    description: Тип ресурса (order, part, user)
+  resource_id:
+    type: string
+    description: Идентификатор ресурса
+  details:
+    type: array
+    items:
+      type: string
+  request_id:
+    type: string

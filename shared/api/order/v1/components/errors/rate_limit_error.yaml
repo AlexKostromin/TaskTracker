@@ -1,0 +1,26 @@
+type: object
+properties:
+  error:
+    type: string
+    example: "RATE_LIMIT_EXCEEDED"
+  code:
+    type: integer
+    example: 429
+  message:
+    type: string
+    example: "Превышен лимит запросов"
+  limit:
+    type: integer
+    description: Лимит запросов
+  period:
+    type: string
+    description: Период лимита
+  retry_after:
+    type: integer
+    description: Время через которое можно повторить запрос (секунды)
+  details:
+    type: array
+    items:
+      type: string
+  request_id:
+    type: string

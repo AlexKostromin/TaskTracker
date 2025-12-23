@@ -1,0 +1,9 @@
+type: object
+properties:
+  payment_method:
+    type: string
+    description: Способ оплаты
+    $ref: "./enums/payment_method.yaml"
+    example: "CARD"
+required:
+  - payment_method
