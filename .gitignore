@@ -1,0 +1,24 @@
+.idea/
+
+# Go build/test artifacts
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Local Go caches created in workspace
+.gocache/
+.gomodcache/
+.gopath/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Env files
+.env
+

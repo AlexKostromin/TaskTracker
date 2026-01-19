@@ -29,8 +29,8 @@ func Load() *Config {
 
 	migrationsDir := os.Getenv("MIGRATIONS_DIR")
 	if migrationsDir == "" {
-		// Миграции лежат в папке postgres/migrations в корне репозитория.
-		migrationsDir = "./postgres/migrations"
+		// Миграции лежат в папке migrations в корне репозитория.
+		migrationsDir = "./migrations"
 	}
 
 	return &Config{
