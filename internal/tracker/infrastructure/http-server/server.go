@@ -8,18 +8,21 @@ import (
 
 	"log"
 
+	trackerV1 "github.com/AlexKostromin/TaskTracker/shared/pkg/openapi/tracker/v1"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
 
 type Server struct {
-	router    *chi.Mux
-	httpPort  string
-	server    *http.Server
-	trackerv1 "github.com/AlexKostromin/TaskTracker/shared/pkg/openapi/tracker/v1"
-	storage   TrackerProcessor
+	router   *chi.Mux
+	httpPort string
+	server   *http.Server
+	trackerV1.UnimplementedHandler
+	storage TrackerProcessor
 }
 type TrackerProcessor interface {
+	CreateTracker(ctx context.Context, request *trackerV1.CreateTrackerRequest) (trackerV1.CreateTrackerRes, error)
+	UpdateTracker(ctx context.Context, request *trackerV1.UpdateTrackerRequest, params trackerV1.UpdateTrackerParams) (trackerV1.UpdateTrackerRes, error)
 }
 
 /*func NewOrderHandler(storage OrderStorage) *OrderHandler {

@@ -4,30 +4,30 @@ import (
 	"context"
 	"sync"
 
+	trackerV1 "github.com/AlexKostromin/TaskTracker/shared/pkg/openapi/tracker/v1"
 	"github.com/google/uuid"
-	orderV1 "gitlab.com/godevs2/micro/shared/pkg/openapi/order/v1"
 )
 
 type TrackerStorage struct {
 	mu       sync.RWMutex
-	trackers map[uuid.UUID]*orderV1.GetOrderResponse
+	trackers map[uuid.UUID]*trackerV1.TrackerResponse
 }
 
 func NewTrackerStorage() *TrackerStorage {
 	return &TrackerStorage{
-		trackers: make(map[uuid.UUID]*orderV1.GetOrderResponse),
+		trackers: make(map[uuid.UUID]*trackerV1.TrackerResponse),
 	}
 }
 
-func (s *TrackerStorage) Create(_ context.Context, order *orderV1.GetOrderResponse) error {
+func (s *TrackerStorage) CreateTracker(_ context.Context, request *trackerV1.CreateTrackerRequest) (trackerV1.CreateTrackerRes, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	return nil
+	return request.Name, nil
 }
 
-func (s *TrackerStorage) Get(_ context.Context, orderUUID uuid.UUID) (*orderV1.GetOrderResponse, bool) {
+func (s *TrackerStorage) UpdateTracker(_ context.Context, request *trackerV1.UpdateTrackerRequest, params trackerV1.UpdateTrackerParams) (*trackerV1.TrackerResponse, error) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
-	return order, ok
+	return
 }

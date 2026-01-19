@@ -1,7 +1,0 @@
-version: v2
-
-lint:
-  use:
-    - STANDARD
-    - COMMENT_ENUM
-    - COMMENT_MESSAGE

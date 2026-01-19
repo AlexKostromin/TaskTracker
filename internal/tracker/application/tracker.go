@@ -3,13 +3,12 @@ package application
 import (
 	"context"
 
-	"github.com/google/uuid"
-	"gitlab.com/godevs2/micro/internal/order/domain/model"
+	trackerV1 "github.com/AlexKostromin/TaskTracker/shared/pkg/openapi/tracker/v1"
 )
 
 type TrackerStorage interface {
-	//Create(ctx context.Context, order *orderV1.GetOrderResponse) error
-	//Get(ctx context.Context, orderUUID uuid.UUID) (*orderV1.GetOrderResponse, bool)
+	CreateTracker(ctx context.Context, request *trackerV1.CreateTrackerRequest) (trackerV1.CreateTrackerRes, error)
+	UpdateTracker(ctx context.Context, request *trackerV1.UpdateTrackerRequest, params trackerV1.UpdateTrackerParams) (trackerV1.UpdateTrackerRes, error)
 }
 
 type TrackerService struct {
@@ -23,8 +22,8 @@ func NewTrackerService(trackerRepo TrackerStorage) *TrackerService {
 }
 
 func (s *TrackerService) Create(ctx context.Context, tracker *models.CreateTrackerRequest) *error {
-	return s.trackerRepo.Create(ctx, tracker)
+	return s.trackerRepo.CreateTracker(ctx, tracker)
 }
-func (s *TrackerService) Get(ctx context.Context, orderUUID uuid.UUID) (*models.GetTrackerResponse, bool) {
-	return s.trackerRepo.Get(ctx, orderUUID)
+func (s *TrackerService) UpdateTracker(ctx context.Context, name string) (*models.GetTrackerResponse, bool) {
+	return s.trackerRepo.UpdateTracker(ctx, name)
 }

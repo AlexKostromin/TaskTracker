@@ -4,9 +4,9 @@ import (
 	"context"
 	"log"
 
-	http_server "gitlab.com/godevs2/micro/internal/order/infrastructure/http-server"
-	"gitlab.com/godevs2/micro/internal/tracker/config"
-	"gitlab.com/godevs2/micro/pkg"
+	"github.com/AlexKostromin/TaskTracker/internal/tracker/config"
+	http_server "github.com/AlexKostromin/TaskTracker/internal/tracker/infrastructure/http-server"
+	"github.com/AlexKostromin/TaskTracker/pkg"
 )
 
 type App struct {
@@ -17,7 +17,17 @@ type App struct {
 func New() *App {
 	cfg := config.Load()
 
-	storage := provideTrackerStorage()
+	db, closeDB, err := provideDB(cfg)
+	if err != nil {
+		log.Fatalf("❌ Ошибка подключения к БД: %v", err)
+	}
+	pkg.Add(closeDB)
+
+	if err := provideMigrations(db, cfg); err != nil {
+		log.Fatalf("❌ Ошибка применения миграций: %v", err)
+	}
+
+	storage := provideTrackerStorage(db)
 	trackerService := provideTrackerService(storage)
 	trackerHandler := provideTrackerHandler(cfg.HTTPPort, trackerService)
 

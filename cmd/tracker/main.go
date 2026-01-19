@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"gitlab.com/godevs2/micro/internal/payment/bootstrap"
+	"github.com/AlexKostromin/TaskTracker/internal/tracker/bootstrap"
 )
 
 func main() {
