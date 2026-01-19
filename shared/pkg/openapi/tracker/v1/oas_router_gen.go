@@ -40,6 +40,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		s.notFound(w, r)
 		return
 	}
+	args := [1]string{}
 
 	// Static code generated router with unwrapped path search.
 	switch {
@@ -57,17 +58,47 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			}
 
 			if len(elem) == 0 {
-				// Leaf node.
 				switch r.Method {
 				case "POST":
 					s.handleCreateTrackerRequest([0]string{}, elemIsEscaped, w, r)
-				case "PUT":
-					s.handleUpdateTrackerRequest([0]string{}, elemIsEscaped, w, r)
 				default:
-					s.notAllowed(w, r, "POST,PUT")
+					s.notAllowed(w, r, "POST")
 				}
 
 				return
+			}
+			switch elem[0] {
+			case '/': // Prefix: "/"
+
+				if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				// Param: "id"
+				// Leaf parameter, slashes are prohibited
+				idx := strings.IndexByte(elem, '/')
+				if idx >= 0 {
+					break
+				}
+				args[0] = elem
+				elem = ""
+
+				if len(elem) == 0 {
+					// Leaf node.
+					switch r.Method {
+					case "PUT":
+						s.handleUpdateTrackerRequest([1]string{
+							args[0],
+						}, elemIsEscaped, w, r)
+					default:
+						s.notAllowed(w, r, "PUT")
+					}
+
+					return
+				}
+
 			}
 
 		}
@@ -83,7 +114,7 @@ type Route struct {
 	operationGroup string
 	pathPattern    string
 	count          int
-	args           [0]string
+	args           [1]string
 }
 
 // Name returns ogen operation name.
@@ -165,7 +196,6 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 			}
 
 			if len(elem) == 0 {
-				// Leaf node.
 				switch method {
 				case "POST":
 					r.name = CreateTrackerOperation
@@ -176,18 +206,45 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					r.args = args
 					r.count = 0
 					return r, true
-				case "PUT":
-					r.name = UpdateTrackerOperation
-					r.summary = "Update tracker"
-					r.operationID = "updateTracker"
-					r.operationGroup = ""
-					r.pathPattern = "/trackers"
-					r.args = args
-					r.count = 0
-					return r, true
 				default:
 					return
 				}
+			}
+			switch elem[0] {
+			case '/': // Prefix: "/"
+
+				if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				// Param: "id"
+				// Leaf parameter, slashes are prohibited
+				idx := strings.IndexByte(elem, '/')
+				if idx >= 0 {
+					break
+				}
+				args[0] = elem
+				elem = ""
+
+				if len(elem) == 0 {
+					// Leaf node.
+					switch method {
+					case "PUT":
+						r.name = UpdateTrackerOperation
+						r.summary = "Update tracker"
+						r.operationID = "updateTracker"
+						r.operationGroup = ""
+						r.pathPattern = "/trackers/{id}"
+						r.args = args
+						r.count = 1
+						return r, true
+					default:
+						return
+					}
+				}
+
 			}
 
 		}

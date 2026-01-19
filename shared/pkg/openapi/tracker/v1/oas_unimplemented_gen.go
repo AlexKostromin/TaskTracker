@@ -26,7 +26,7 @@ func (UnimplementedHandler) CreateTracker(ctx context.Context, req *CreateTracke
 //
 // Update tracker.
 //
-// PUT /trackers
+// PUT /trackers/{id}
 func (UnimplementedHandler) UpdateTracker(ctx context.Context, req *UpdateTrackerRequest, params UpdateTrackerParams) (r UpdateTrackerRes, _ error) {
 	return r, ht.ErrNotImplemented
 }

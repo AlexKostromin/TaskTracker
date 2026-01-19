@@ -1,0 +1,16 @@
+./enum.go
+./errors.go
+./extensions.go
+./external.go
+./infer.go
+./num.go
+./parser.go
+./parser_enum.go
+./parser_settings.go
+./raw_custom.go
+./raw_schema.go
+./raw_value.go
+./resolve.go
+./resolver.go
+./schema.go
+./utils.go

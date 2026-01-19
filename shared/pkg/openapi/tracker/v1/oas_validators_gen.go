@@ -24,10 +24,10 @@ func (s *UpdateTrackerRequest) Validate() error {
 					Email:         false,
 					Hostname:      false,
 					Regex:         nil,
-					MinNumeric:    0,
+				/*	MinNumeric:    0,
 					MinNumericSet: false,
 					MaxNumeric:    0,
-					MaxNumericSet: false,
+					MaxNumericSet: false,*/
 				}).Validate(string(value)); err != nil {
 					return errors.Wrap(err, "string")
 				}

@@ -137,10 +137,17 @@ func (s *CreateTrackerRequest) encodeFields(e *jx.Encoder) {
 		e.FieldStart("name")
 		e.Str(s.Name)
 	}
+	{
+		if s.Description.Set {
+			e.FieldStart("description")
+			s.Description.Encode(e)
+		}
+	}
 }
 
-var jsonFieldsNameOfCreateTrackerRequest = [1]string{
+var jsonFieldsNameOfCreateTrackerRequest = [2]string{
 	0: "name",
+	1: "description",
 }
 
 // Decode decodes CreateTrackerRequest from json.
@@ -163,6 +170,16 @@ func (s *CreateTrackerRequest) Decode(d *jx.Decoder) error {
 				return nil
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"name\"")
+			}
+		case "description":
+			if err := func() error {
+				s.Description.Reset()
+				if err := s.Description.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"description\"")
 			}
 		default:
 			return d.Skip()
@@ -504,11 +521,18 @@ func (s *TrackerResponse) encodeFields(e *jx.Encoder) {
 			s.Name.Encode(e)
 		}
 	}
+	{
+		if s.Description.Set {
+			e.FieldStart("description")
+			s.Description.Encode(e)
+		}
+	}
 }
 
-var jsonFieldsNameOfTrackerResponse = [2]string{
+var jsonFieldsNameOfTrackerResponse = [3]string{
 	0: "id",
 	1: "name",
+	2: "description",
 }
 
 // Decode decodes TrackerResponse from json.
@@ -538,6 +562,16 @@ func (s *TrackerResponse) Decode(d *jx.Decoder) error {
 				return nil
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"name\"")
+			}
+		case "description":
+			if err := func() error {
+				s.Description.Reset()
+				if err := s.Description.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"description\"")
 			}
 		default:
 			return d.Skip()

@@ -1,0 +1,7 @@
+./error.go
+./file.go
+./lines.go
+./location.go
+./locator.go
+./position.go
+./print.go

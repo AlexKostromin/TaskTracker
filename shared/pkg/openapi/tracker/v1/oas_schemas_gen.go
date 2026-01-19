@@ -45,6 +45,8 @@ func (*BadRequestError) updateTrackerRes() {}
 type CreateTrackerRequest struct {
 	// Ниаменование Tracker.
 	Name string `json:"name"`
+	// Новое описание трекера.
+	Description OptString `json:"description"`
 }
 
 // GetName returns the value of Name.
@@ -52,9 +54,19 @@ func (s *CreateTrackerRequest) GetName() string {
 	return s.Name
 }
 
+// GetDescription returns the value of Description.
+func (s *CreateTrackerRequest) GetDescription() OptString {
+	return s.Description
+}
+
 // SetName sets the value of Name.
 func (s *CreateTrackerRequest) SetName(val string) {
 	s.Name = val
+}
+
+// SetDescription sets the value of Description.
+func (s *CreateTrackerRequest) SetDescription(val OptString) {
+	s.Description = val
 }
 
 // Ref: #/components/schemas/generic_error
@@ -240,6 +252,8 @@ type TrackerResponse struct {
 	ID OptInt `json:"id"`
 	// Название трекера.
 	Name OptString `json:"name"`
+	// Новое описание трекера.
+	Description OptString `json:"description"`
 }
 
 // GetID returns the value of ID.
@@ -252,6 +266,11 @@ func (s *TrackerResponse) GetName() OptString {
 	return s.Name
 }
 
+// GetDescription returns the value of Description.
+func (s *TrackerResponse) GetDescription() OptString {
+	return s.Description
+}
+
 // SetID sets the value of ID.
 func (s *TrackerResponse) SetID(val OptInt) {
 	s.ID = val
@@ -260,6 +279,11 @@ func (s *TrackerResponse) SetID(val OptInt) {
 // SetName sets the value of Name.
 func (s *TrackerResponse) SetName(val OptString) {
 	s.Name = val
+}
+
+// SetDescription sets the value of Description.
+func (s *TrackerResponse) SetDescription(val OptString) {
+	s.Description = val
 }
 
 func (*TrackerResponse) createTrackerRes() {}

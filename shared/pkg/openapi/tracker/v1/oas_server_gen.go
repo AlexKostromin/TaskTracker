@@ -18,7 +18,7 @@ type Handler interface {
 	//
 	// Update tracker.
 	//
-	// PUT /trackers
+	// PUT /trackers/{id}
 	UpdateTracker(ctx context.Context, req *UpdateTrackerRequest, params UpdateTrackerParams) (UpdateTrackerRes, error)
 	// NewError creates *GenericErrorStatusCode from error returned by handler.
 	//

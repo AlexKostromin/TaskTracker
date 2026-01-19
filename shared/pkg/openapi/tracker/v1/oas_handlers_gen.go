@@ -189,14 +189,14 @@ func (s *Server) handleCreateTrackerRequest(args [0]string, argsEscaped bool, w 
 //
 // Update tracker.
 //
-// PUT /trackers
-func (s *Server) handleUpdateTrackerRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+// PUT /trackers/{id}
+func (s *Server) handleUpdateTrackerRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	statusWriter := &codeRecorder{ResponseWriter: w}
 	w = statusWriter
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("updateTracker"),
 		semconv.HTTPRequestMethodKey.String("PUT"),
-		semconv.HTTPRouteKey.String("/trackers"),
+		semconv.HTTPRouteKey.String("/trackers/{id}"),
 	}
 
 	// Start a span for this request.

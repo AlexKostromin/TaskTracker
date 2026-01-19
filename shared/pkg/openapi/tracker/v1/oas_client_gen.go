@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/go-faster/errors"
+	"github.com/ogen-go/ogen/conv"
 	ht "github.com/ogen-go/ogen/http"
 	"github.com/ogen-go/ogen/otelogen"
 	"github.com/ogen-go/ogen/uri"
@@ -36,7 +37,7 @@ type Invoker interface {
 	//
 	// Update tracker.
 	//
-	// PUT /trackers
+	// PUT /trackers/{id}
 	UpdateTracker(ctx context.Context, request *UpdateTrackerRequest, params UpdateTrackerParams) (UpdateTrackerRes, error)
 }
 
@@ -167,7 +168,7 @@ func (c *Client) sendCreateTracker(ctx context.Context, request *CreateTrackerRe
 //
 // Update tracker.
 //
-// PUT /trackers
+// PUT /trackers/{id}
 func (c *Client) UpdateTracker(ctx context.Context, request *UpdateTrackerRequest, params UpdateTrackerParams) (UpdateTrackerRes, error) {
 	res, err := c.sendUpdateTracker(ctx, request, params)
 	return res, err
@@ -177,7 +178,7 @@ func (c *Client) sendUpdateTracker(ctx context.Context, request *UpdateTrackerRe
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("updateTracker"),
 		semconv.HTTPRequestMethodKey.String("PUT"),
-		semconv.URLTemplateKey.String("/trackers"),
+		semconv.URLTemplateKey.String("/trackers/{id}"),
 	}
 	otelAttrs = append(otelAttrs, c.cfg.Attributes...)
 
@@ -210,8 +211,26 @@ func (c *Client) sendUpdateTracker(ctx context.Context, request *UpdateTrackerRe
 
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
-	var pathParts [1]string
-	pathParts[0] = "/trackers"
+	var pathParts [2]string
+	pathParts[0] = "/trackers/"
+	{
+		// Encode "id" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "id",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.IntToString(params.ID))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[1] = encoded
+	}
 	uri.AddPathParts(u, pathParts[:]...)
 
 	stage = "EncodeRequest"
