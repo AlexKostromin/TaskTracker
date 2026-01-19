@@ -1,0 +1,15 @@
+./decimal.go
+./equal.go
+./external.go
+./float.go
+./int.go
+./ip.go
+./json.go
+./mac.go
+./std_duration.go
+./time.go
+./uint.go
+./unix.go
+./unix_str.go
+./uri.go
+./uuid.go

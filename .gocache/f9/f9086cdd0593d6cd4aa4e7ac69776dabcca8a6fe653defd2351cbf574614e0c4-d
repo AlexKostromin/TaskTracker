@@ -1,0 +1,9 @@
+./array.go
+./decimal.go
+./errors.go
+./float.go
+./int.go
+./object.go
+./ogen.go
+./string.go
+./validate.go

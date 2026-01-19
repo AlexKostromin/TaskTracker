@@ -1,0 +1,608 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "title",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/optionalParameters": {
+      "get": {
+        "operationId": "optionalParameters",
+        "parameters": [
+          {
+            "name": "integer",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "string",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "boolean",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "object",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          {
+            "name": "timestamp",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "array",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OptionalQueryParametersResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/optionalArrayParameter": {
+      "get": {
+        "operationId": "optionalArrayParameter",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "x-oapi-codegen-extra-tags": {
+                "customTag": "test"
+              }
+            }
+          },
+          {
+            "name": "header",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "x-oapi-codegen-extra-tags": {
+                "customTag": "test"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/objectQueryParameter": {
+      "get": {
+        "operationId": "objectQueryParameter",
+        "parameters": [
+          {
+            "name": "formObject",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "$ref": "#/components/schemas/OneLevelObject"
+            }
+          },
+          {
+            "name": "deepObject",
+            "in": "query",
+            "style": "deepObject",
+            "schema": {
+              "$ref": "#/components/schemas/OneLevelObject"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "style",
+                    "value"
+                  ],
+                  "properties": {
+                    "style": {
+                      "type": "string"
+                    },
+                    "value": {
+                      "$ref": "#/components/schemas/OneLevelObject"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/objectCookieParameter": {
+      "get": {
+        "operationId": "objectCookieParameter",
+        "parameters": [
+          {
+            "name": "value",
+            "in": "cookie",
+            "style": "form",
+            "explode": false,
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/OneLevelObject"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OneLevelObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/contentParameters/{path}": {
+      "get": {
+        "operationId": "contentParameters",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          {
+            "name": "path",
+            "in": "path",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          {
+            "name": "X-Header",
+            "in": "header",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          {
+            "name": "cookie",
+            "in": "cookie",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ContentParameters"
+          }
+        }
+      }
+    },
+    "/pathParameter/{value}": {
+      "get": {
+        "description": "Test for path param",
+        "operationId": "pathParameter",
+        "parameters": [
+          {
+            "name": "value",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "x-oapi-codegen-extra-tags": {
+                "customTag": "test"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns path value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Value"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/headerParameter": {
+      "get": {
+        "description": "Test for header param",
+        "operationId": "headerParameter",
+        "parameters": [
+          {
+            "name": "X-Value",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "x-oapi-codegen-extra-tags": {
+                "customTag": "test"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns header value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Value"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cookieParameter": {
+      "get": {
+        "description": "Test for cookie param",
+        "operationId": "cookieParameter",
+        "parameters": [
+          {
+            "name": "value",
+            "in": "cookie",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "x-oapi-codegen-extra-tags": {
+                "customTag": "test"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns cookie value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Value"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/complicatedParameterName": {
+      "get": {
+        "parameters": [
+          {
+            "name": "=",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "+",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "question?",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "and&",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "percent%",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User info"
+          }
+        }
+      }
+    },
+    "/same_name/{param}": {
+      "get": {
+        "operationId": "sameName",
+        "summary": "parameters with different location, but with the same name",
+        "parameters": [
+          {
+            "name": "param",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "param",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User info"
+          }
+        }
+      }
+    },
+    "/similarNames": {
+      "get": {
+        "operationId": "similarNames",
+        "summary": "parameters with different location, but with similar names",
+        "parameters": [
+          {
+            "name": "x-param",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Param",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "OptionalQueryParametersResponse": {
+        "type": "object",
+        "required": [],
+        "properties": {
+          "integer": {
+            "type": "integer"
+          },
+          "string": {
+            "type": "string"
+          },
+          "boolean": {
+            "type": "boolean"
+          },
+          "object": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "type": "string"
+              }
+            }
+          },
+          "timestamp": {
+              "type": "string",
+              "format": "date-time"
+          },
+          "array": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Value": {
+        "type": "object",
+        "required": [
+          "value"
+        ],
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "x-oapi-codegen-extra-tags": {
+          "customTag": "test"
+        }
+      },
+      "User": {
+        "type": "object",
+        "required": [
+          "id",
+          "username",
+          "role"
+        ],
+        "x-oapi-codegen-extra-tags": {
+          "customTag": "test"
+        },
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "username": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "user",
+              "bot"
+            ]
+          },
+          "friends": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            }
+          }
+        }
+      },
+      "OneLevelObject": {
+        "type": "object",
+        "required": [
+          "min",
+          "max",
+          "filter"
+        ],
+        "properties": {
+          "min": {
+            "type": "integer"
+          },
+          "max": {
+            "type": "integer"
+          },
+          "filter": {
+            "type": "string"
+          }
+        },
+        "x-oapi-codegen-extra-tags": {
+          "customTag": "test"
+        }
+      }
+    },
+    "responses": {
+      "ContentParameters": {
+        "description": "Ok",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "query",
+                "path",
+                "header",
+                "cookie"
+              ],
+              "properties": {
+                "query": {
+                  "$ref": "#/components/schemas/User"
+                },
+                "path": {
+                  "$ref": "#/components/schemas/User"
+                },
+                "header": {
+                  "$ref": "#/components/schemas/User"
+                },
+                "cookie": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

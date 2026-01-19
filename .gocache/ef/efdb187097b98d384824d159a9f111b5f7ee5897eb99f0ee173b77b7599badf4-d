@@ -1,0 +1,12 @@
+./Info.go
+./api.go
+./example.go
+./mediatype.go
+./operation.go
+./parameter.go
+./path.go
+./security.go
+./server.go
+./tag.go
+./version.go
+./webhook.go

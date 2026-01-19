@@ -3,12 +3,12 @@ package application
 import (
 	"context"
 
-	trackerV1 "github.com/AlexKostromin/TaskTracker/shared/pkg/openapi/tracker/v1"
+	models "github.com/AlexKostromin/TaskTracker/internal/tracker/domain"
 )
 
 type TrackerStorage interface {
-	CreateTracker(ctx context.Context, request *trackerV1.CreateTrackerRequest) (trackerV1.CreateTrackerRes, error)
-	UpdateTracker(ctx context.Context, request *trackerV1.UpdateTrackerRequest, params trackerV1.UpdateTrackerParams) (trackerV1.UpdateTrackerRes, error)
+	CreateTracker(ctx context.Context, request models.CreateTrackerRequest) (models.Tracker, error)
+	UpdateTracker(ctx context.Context, request models.UpdateTrackerRequest, params models.UpdateTrackerParams) (models.Tracker, error)
 }
 
 type TrackerService struct {
@@ -21,9 +21,10 @@ func NewTrackerService(trackerRepo TrackerStorage) *TrackerService {
 	}
 }
 
-func (s *TrackerService) Create(ctx context.Context, tracker *models.CreateTrackerRequest) *error {
+func (s *TrackerService) CreateTracker(ctx context.Context, tracker models.CreateTrackerRequest) (models.Tracker, error) {
 	return s.trackerRepo.CreateTracker(ctx, tracker)
 }
-func (s *TrackerService) UpdateTracker(ctx context.Context, name string) (*models.GetTrackerResponse, bool) {
-	return s.trackerRepo.UpdateTracker(ctx, name)
+
+func (s *TrackerService) UpdateTracker(ctx context.Context, request models.UpdateTrackerRequest, params models.UpdateTrackerParams) (models.Tracker, error) {
+	return s.trackerRepo.UpdateTracker(ctx, request, params)
 }

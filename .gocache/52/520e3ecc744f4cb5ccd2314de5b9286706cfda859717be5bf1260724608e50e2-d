@@ -1,0 +1,4 @@
+./errors.go
+./jsonpointer.go
+./resolve_ctx.go
+./split.go

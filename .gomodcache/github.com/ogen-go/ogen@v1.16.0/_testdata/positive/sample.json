@@ -1,0 +1,2238 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Sample Pet Store App",
+    "description": "This is a sample server for a pet store.",
+    "termsOfService": "https://example.com/terms/",
+    "contact": {
+      "name": "API Support",
+      "url": "https://www.example.com/support",
+      "email": "support@example.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.1"
+  },
+  "paths": {
+    "/pet/name/{id}": {
+      "get": {
+        "description": "Returns pet name by pet id",
+        "operationId": "petNameByID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "pet ID",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pet name",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pet/friendNames/{id}": {
+      "get": {
+        "description": "Returns names of all friends of pet",
+        "operationId": "petFriendsNamesByID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "pet ID",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Names of all friends",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pet": {
+      "get": {
+        "description": "Returns pet from the system that the user has access to",
+        "operationId": "petGet",
+        "parameters": [
+          {
+            "name": "petID",
+            "in": "query",
+            "description": "ID of pet",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1337
+            }
+          },
+          {
+            "name": "X-Tags",
+            "in": "header",
+            "description": "tags of pets",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          },
+          {
+            "name": "X-Scope",
+            "in": "header",
+            "description": "pet scopes",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "token",
+            "in": "query",
+            "description": "token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A pet.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pet"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Creates pet",
+        "operationId": "petCreate",
+        "requestBody": {
+          "description": "pet to add to the system",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pet"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A new pet.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pet"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pet/avatar": {
+      "get": {
+        "description": "Returns pet avatar by id",
+        "operationId": "petGetAvatarByID",
+        "parameters": [
+          {
+            "name": "petID",
+            "in": "query",
+            "description": "ID of pet",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A pet avatar",
+            "content": {
+              "application/octet-stream": {}
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      },
+      "post": {
+        "description": "Uploads pet avatar by id",
+        "operationId": "petUploadAvatarByID",
+        "parameters": [
+          {
+            "name": "petID",
+            "in": "query",
+            "description": "ID of pet",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/octet-stream": {}
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A pet avatar uploaded"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/pet/{name}": {
+      "get": {
+        "description": "Returns pet by name from the system that the user has access to",
+        "operationId": "petGetByName",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Name of pet",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A pet.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pet"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pet/{name}/avatar": {
+      "get": {
+        "description": "Returns pet's avatar by name",
+        "operationId": "petGetAvatarByName",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "Name of pet",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A pet avatar",
+            "content": {
+              "application/octet-stream": {}
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/foobar": {
+      "get": {
+        "description": "Dumb endpoint for testing things",
+        "operationId": "foobarGet",
+        "parameters": [
+          {
+            "name": "inlinedParam",
+            "in": "query",
+            "description": "inlinedParam",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/skipParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/PetResponse"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "post": {
+        "description": "Dumb endpoint for testing things",
+        "operationId": "foobarPost",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PetCreate"
+        },
+        "responses": {
+          "200": {
+            "description": "A new pet.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pet"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      },
+      "put": {
+        "responses": {
+          "default": {
+            "description": "Empty response"
+          }
+        }
+      }
+    },
+    "/pet/updateName": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string",
+                "minLength": 6
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "empty"
+          }
+        }
+      }
+    },
+    "/pet/updateNameAlias": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PetName"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "empty"
+          }
+        }
+      }
+    },
+    "/error": {
+      "get": {
+        "description": "Returns error",
+        "operationId": "errorGet",
+        "responses": {
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/name/{id}/{foo}1234{bar}-{baz}!{kek}": {
+      "get": {
+        "description": "Retrieve data",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "foo",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          {
+            "name": "bar",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          {
+            "name": "baz",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          {
+            "name": "kek",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "type": "string"
+            }
+          }
+        ],
+        "operationId": "dataGetFormat",
+        "responses": {
+          "200": {
+            "description": "Data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/testFloatValidation": {
+      "post": {
+        "operationId": "testFloatValidation",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TestFloatValidation"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        }
+      }
+    },
+    "/testDecimalValidation": {
+      "post": {
+        "operationId": "testDecimalValidation",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TestDecimalValidation"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        }
+      }
+    },
+    "/oneofBug": {
+      "post": {
+        "operationId": "oneofBug",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OneOfBugs"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        }
+      }
+    },
+    "/recursiveMap": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Returns infinite object of object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecursiveMap"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stringIntMap": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Returns object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringIntMap"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/patternRecursiveMap": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Returns object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatternRecursiveMap"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/recursiveArray": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Returns infinite array of arrays",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecursiveArray"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/enumTest": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FormatEnumTest"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/noAdditionalPropertiesTest": {
+      "get": {
+        "operationId": "noAdditionalPropertiesTest",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoAdditionalPropertiesTest"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/defaultTest": {
+      "post": {
+        "operationId": "defaultTest",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/defaultQueryParameter"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DefaultTest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/nullableDefaultResponse": {
+      "get": {
+        "operationId": "nullableDefaultResponse",
+        "responses": {
+          "default": {
+            "description": "nullable integer",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/securityTest": {
+      "get": {
+        "operationId": "securityTest",
+        "security": [
+          {
+            "api_key": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/testNullableOneofs": {
+      "get": {
+        "operationId": "testNullableOneofs",
+        "responses": {
+          "200": {
+            "description": "OneOfWithNullable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OneOfWithNullable"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "OneOfWithNullable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OneOfWithNullable"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "OneOfBooleanSumNullables",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OneOfBooleanSumNullables"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/testUniqueItems": {
+      "get": {
+        "operationId": "testUniqueItems",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UniqueItemsTest"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/testTuple": {
+      "get": {
+        "operationId": "testTuple",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TupleTest"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/testTupleNamed": {
+      "get": {
+        "operationId": "testTupleNamed",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TupleNamedTest"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/testInlineOneof": {
+      "get": {
+        "operationId": "testInlineOneof",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestInlineOneOf"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/testIssue1310": {
+      "get": {
+        "operationId": "testIssue1310",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Issue1310"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/testIssue1461": {
+      "get": {
+        "operationId": "testIssue1461",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Issue1461"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ID": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "integer"
+          }
+        ]
+      },
+      "DescriptionDetailed": {
+        "type": "object",
+        "required": [
+          "name",
+          "count"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer"
+          },
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          }
+        }
+      },
+      "DescriptionSimple": {
+        "type": "object",
+        "required": [
+          "description"
+        ],
+        "properties": {
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "StringMap": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "ValidationStringMap": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "string",
+          "minLength": 1
+        },
+        "minProperties": 1,
+        "maxProperties": 4
+      },
+      "RecursiveMap": {
+        "type": "object",
+        "additionalProperties": {
+          "$ref": "#/components/schemas/RecursiveMap"
+        },
+        "properties": {
+          "optional_recursive_field": {
+            "$ref": "#/components/schemas/RecursiveMap"
+          }
+        }
+      },
+      "PatternRecursiveMap": {
+        "type": "object",
+        "patternProperties": {
+          "foo.*": {
+            "$ref": "#/components/schemas/PatternRecursiveMap"
+          }
+        }
+      },
+      "StringIntMap": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "integer"
+        },
+        "patternProperties": {
+          "string_.*": {
+            "type": "string"
+          }
+        }
+      },
+      "RecursiveArray": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/RecursiveArray"
+        }
+      },
+      "NullableEnums": {
+        "type": "object",
+        "required": [
+          "only_nullable",
+          "only_null_value",
+          "both"
+        ],
+        "properties": {
+          "only_nullable": {
+            "type": "string",
+            "nullable": true,
+            "description": "must not be nullable",
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          },
+          "only_null_value": {
+            "type": "string",
+            "description": "must be nullable",
+            "enum": [
+              "asc",
+              "desc",
+              null
+            ]
+          },
+          "both": {
+            "type": "string",
+            "nullable": true,
+            "description": "must be nullable",
+            "enum": [
+              "asc",
+              "desc",
+              null
+            ]
+          }
+        }
+      },
+      "StringStringMap": {
+        "type": "object",
+        "additionalProperties": {
+          "$ref": "#/components/schemas/StringMap"
+        }
+      },
+      "MapWithProperties": {
+        "type": "object",
+        "required": [
+          "required"
+        ],
+        "properties": {
+          "required": {
+            "type": "integer"
+          },
+          "optional": {
+            "type": "integer"
+          },
+          "sub_map": {
+            "$ref": "#/components/schemas/StringMap"
+          },
+          "inlined_sub_map": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "map_validation": {
+            "$ref": "#/components/schemas/ValidationStringMap"
+          }
+        },
+        "additionalProperties": {
+          "type": "string"
+        },
+        "maxProperties": 7
+      },
+      "MaxPropertiesTest": {
+        "type": "object",
+        "required": [
+          "required"
+        ],
+        "properties": {
+          "required": {
+            "type": "integer"
+          },
+          "optional_a": {
+            "type": "integer"
+          },
+          "optional_b": {
+            "type": "integer"
+          },
+          "optional_c": {
+            "type": "integer"
+          }
+        },
+        "minProperties": 2,
+        "maxProperties": 2
+      },
+      "Data": {
+        "type": "object",
+        "required": [
+          "id",
+          "email",
+          "format",
+          "hostname",
+          "description"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "description": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/DescriptionDetailed"
+              },
+              {
+                "$ref": "#/components/schemas/DescriptionSimple"
+              }
+            ]
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "hostname": {
+            "type": "string",
+            "format": "hostname"
+          },
+          "format": {
+            "type": "string",
+            "pattern": "^\\d-\\d$"
+          },
+          "base64": {
+            "type": "string",
+            "format": "byte"
+          },
+          "nullable_enum": {
+            "$ref": "#/components/schemas/NullableEnums"
+          }
+        }
+      },
+      "ArrayTest": {
+        "description": "test array encoder/decoder generation",
+        "type": "object",
+        "required": [
+          "required",
+          "nullable_required"
+        ],
+        "properties": {
+          "required": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "optional": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "nullable_required": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "nullable_optional": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "UniqueItemsTest": {
+        "type": "object",
+        "required": [
+          "required_unique"
+        ],
+        "properties": {
+          "required_unique": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "nullable_optional_unique": {
+            "type": "array",
+            "nullable": true,
+            "uniqueItems": true,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "NullValue": {
+        "type": "null"
+      },
+      "Pet": {
+        "description": "cute and lovely creature",
+        "type": "object",
+        "properties": {
+          "primary": {
+            "$ref": "#/components/schemas/Pet"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0,
+            "maximum": 100000
+          },
+          "unique_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 4,
+            "maxLength": 24
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "fifa",
+              "fofa"
+            ]
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "big",
+              "smol"
+            ]
+          },
+          "tag": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ip": {
+            "type": "string",
+            "format": "ip"
+          },
+          "ip_v4": {
+            "type": "string",
+            "format": "ipv4"
+          },
+          "ip_v6": {
+            "type": "string",
+            "format": "ipv6"
+          },
+          "uri": {
+            "type": "string",
+            "format": "uri"
+          },
+          "birthday": {
+            "type": "string",
+            "format": "date"
+          },
+          "rate": {
+            "type": "string",
+            "format": "duration"
+          },
+          "nickname": {
+            "type": "string",
+            "nullable": true
+          },
+          "nullStr": {
+            "type": "string",
+            "nullable": true
+          },
+          "friends": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pet"
+            },
+            "maxItems": 255
+          },
+          "next": {
+            "$ref": "#/components/schemas/Data"
+          },
+          "testInteger1": {
+            "type": "integer",
+            "multipleOf": 10
+          },
+          "testFloat1": {
+            "type": "number",
+            "multipleOf": 10,
+            "minimum": 15
+          },
+          "testArray1": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "maxItems": 16,
+              "items": {
+                "type": "string",
+                "maxLength": 255
+              }
+            }
+          },
+          "testArray2": {
+            "$ref": "#/components/schemas/ArrayTest"
+          },
+          "testMap": {
+            "$ref": "#/components/schemas/StringStringMap"
+          },
+          "testMapWithProps": {
+            "$ref": "#/components/schemas/MapWithProperties"
+          },
+          "testAny": {
+            "$ref": "#/components/schemas/AnyTest"
+          },
+          "testMaxProperties": {
+            "$ref": "#/components/schemas/MaxPropertiesTest"
+          },
+          "testDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "testDuration": {
+            "type": "string",
+            "format": "duration"
+          },
+          "testTime": {
+            "type": "string",
+            "format": "time"
+          },
+          "testDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "nullValue": {
+            "$ref": "#/components/schemas/NullValue"
+          },
+          "extraTags": {
+            "type": "string",
+            "x-oapi-codegen-extra-tags": {
+              "gorm": "index",
+              "valid": "customValidator"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "unique_id",
+          "name",
+          "birthday",
+          "nickname",
+          "rate",
+          "ip",
+          "ip_v4",
+          "ip_v6",
+          "uri",
+          "kind"
+        ]
+      },
+      "PetName": {
+        "type": "string",
+        "minLength": 6
+      },
+      "FormatEnumTest": {
+        "properties": {
+          "byte": {
+            "type": "string",
+            "format": "byte",
+            "enum": [
+              "SGVsbG8=",
+              "V29ybGQ"
+            ]
+          },
+          "time": {
+            "type": "string",
+            "format": "time",
+            "enum": [
+              "15:04:05",
+              "16:04:05"
+            ]
+          }
+        }
+      },
+      "OneOfBugs": {
+        "type": "object",
+        "required": [
+          "issue143",
+          "additional-fields"
+        ],
+        "properties": {
+          "issue143": {
+            "$ref": "#/components/schemas/Issue143"
+          },
+          "additional-fields": {
+            "$ref": "#/components/schemas/OneVariantHasNoUniqueFields"
+          },
+          "oneOf-uuid-int-enum": {
+            "$ref": "#/components/schemas/OneOfUUIDAndIntEnum"
+          },
+          "oneOf-mapping-reference": {
+            "$ref": "#/components/schemas/OneOfMappingReference"
+          },
+          "issue943": {
+            "$ref": "#/components/schemas/Issue943"
+          }
+        }
+      },
+      "Issue143": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "common-1",
+              "common-2",
+              "unique-1"
+            ],
+            "properties": {
+              "common-1": {
+                "type": "string"
+              },
+              "common-2": {
+                "type": "integer"
+              },
+              "unique-1": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "common-1",
+              "common-2",
+              "unique-2"
+            ],
+            "properties": {
+              "common-1": {
+                "type": "string"
+              },
+              "common-2": {
+                "type": "integer"
+              },
+              "unique-2": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "common-1",
+              "common-2",
+              "unique-3"
+            ],
+            "properties": {
+              "common-1": {
+                "type": "string"
+              },
+              "common-2": {
+                "type": "integer"
+              },
+              "common-3": {
+                "type": "integer"
+              },
+              "unique-3": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "common-1",
+              "common-2",
+              "unique-4"
+            ],
+            "properties": {
+              "common-3": {
+                "type": "integer"
+              },
+              "unique-4": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "OneVariantHasNoUniqueFields": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "a",
+              "c"
+            ],
+            "properties": {
+              "a": {
+                "type": "string"
+              },
+              "b": {
+                "type": "integer"
+              },
+              "c": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "a",
+              "c"
+            ],
+            "properties": {
+              "a": {
+                "type": "string"
+              },
+              "b": {
+                "type": "integer"
+              },
+              "c": {
+                "type": "string"
+              },
+              "d": {
+                "type": "integer"
+              }
+            }
+          }
+        ]
+      },
+      "OneOfUUIDAndIntEnum": {
+        "oneOf": [
+          {
+            "format": "uuid",
+            "type": "string"
+          },
+          {
+            "enum": [
+              0,
+              1
+            ],
+            "type": "integer"
+          }
+        ]
+      },
+      "OneOfMappingReference": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/OneOfMappingReferenceA"
+          },
+          {
+            "$ref": "#/components/schemas/OneOfMappingReferenceB"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "infoType",
+          "mapping": {
+            "simple": "#/components/schemas/OneOfMappingReferenceA",
+            "extended": "#/components/schemas/OneOfMappingReferenceB"
+          }
+        }
+      },
+      "OneOfMappingReferenceA": {
+        "type": "object",
+        "properties": {
+          "infoType": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "OneOfMappingReferenceB": {
+        "type": "object",
+        "properties": {
+          "infoType": {
+            "type": "string"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "type": "object",
+            "not": {
+              "type": "integer"
+            }
+          },
+          "info": {
+            "type": "string"
+          }
+        }
+      },
+      "OneOfWithNullable": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "OneOfNullables": {
+        "oneOf": [
+          {
+            "type": "string",
+            "nullable": true
+          },
+          {
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "OneOfBooleanSumNullables": {
+        "oneOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/components/schemas/OneOfNullables"
+          }
+        ]
+      },
+      "Issue943": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/Issue943Variant1"
+          },
+          {
+            "$ref": "#/components/schemas/Issue943Variant2"
+          },
+          {
+            "$ref": "#/components/schemas/Issue943Map"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "selector",
+          "mapping": {
+            "variant1": "#/components/schemas/Issue943Variant1",
+            "variant2": "#/components/schemas/Issue943Variant2",
+            "variant3": "#/components/schemas/Issue943Map"
+          }
+        }
+      },
+      "Issue943Variant1": {
+        "type": "object",
+        "required": [
+          "selector",
+          "variant1_field"
+        ],
+        "properties": {
+          "selector": {
+            "type": "string"
+          },
+          "variant1_field": {
+            "type": "integer"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Issue943Variant2": {
+        "type": "object",
+        "required": [
+          "selector",
+          "variant2_field"
+        ],
+        "properties": {
+          "selector": {
+            "type": "string"
+          },
+          "variant2_field": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Issue943Map": {
+        "type": "object",
+        "required": [
+          "selector"
+        ],
+        "properties": {
+          "selector": {
+            "type": "string"
+          }
+        },
+        "patternProperties": {
+          "^variant3_.*": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TestFloatValidation": {
+        "type": "object",
+        "required": [
+          "minmax",
+          "multipleOf"
+        ],
+        "properties": {
+          "minmax": {
+            "type": "number",
+            "minimum": 1.5,
+            "maximum": 2.0
+          },
+          "multipleOf": {
+            "type": "number",
+            "multipleOf": 5.0
+          }
+        }
+      },
+      "TestDecimalValidation": {
+        "type": "object",
+        "required": [
+          "minmax",
+          "multipleOf"
+        ],
+        "properties": {
+          "minmax": {
+            "type": "number",
+            "format": "decimal",
+            "minimum": 1.5,
+            "maximum": 2.0
+          },
+          "multipleOf": {
+            "type": "number",
+            "format": "decimal",
+            "multipleOf": 5.0
+          }
+        }
+      },
+      "AnyTest": {
+        "type": "object",
+        "properties": {
+          "empty": {},
+          "any_map": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "any_array": {
+            "type": "array"
+          }
+        }
+      },
+      "DefaultTest": {
+        "type": "object",
+        "required": [
+          "required"
+        ],
+        "properties": {
+          "required": {
+            "type": "string",
+            "default": "required"
+          },
+          "str": {
+            "type": "string",
+            "default": "str"
+          },
+          "nullStr": {
+            "type": "string",
+            "nullable": true,
+            "default": null
+          },
+          "enum": {
+            "type": "string",
+            "enum": [
+              "big",
+              "smol"
+            ],
+            "default": "big"
+          },
+          "uuid": {
+            "type": "string",
+            "format": "uuid",
+            "default": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "ip": {
+            "type": "string",
+            "format": "ip",
+            "default": "1.1.1.1"
+          },
+          "ip_v4": {
+            "type": "string",
+            "format": "ipv4",
+            "default": "1.1.1.1"
+          },
+          "ip_v6": {
+            "type": "string",
+            "format": "ipv6",
+            "default": "2001:db8:85a3::8a2e:370:7334"
+          },
+          "uri": {
+            "type": "string",
+            "format": "uri",
+            "default": "s3://foo/baz"
+          },
+          "birthday": {
+            "type": "string",
+            "format": "date",
+            "default": "2011-10-10"
+          },
+          "rate": {
+            "type": "string",
+            "format": "duration",
+            "default": "5s"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "default": "foo@example.com"
+          },
+          "hostname": {
+            "type": "string",
+            "format": "hostname",
+            "default": "example.org"
+          },
+          "format": {
+            "type": "string",
+            "pattern": "^\\d-\\d$",
+            "default": "1-2"
+          },
+          "base64": {
+            "type": "string",
+            "format": "byte",
+            "default": "aGVsbG8sIHdvcmxkIQ=="
+          }
+        }
+      },
+      "NoAdditionalPropertiesTest": {
+        "properties": {
+          "empty": {
+            "$ref": "#/components/schemas/OnlyEmptyObject"
+          },
+          "oneProperty": {
+            "$ref": "#/components/schemas/OnePropertyObject"
+          },
+          "onlyPatterned": {
+            "$ref": "#/components/schemas/OnlyPatternedPropsObject"
+          }
+        }
+      },
+      "OnlyEmptyObject": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "OnePropertyObject": {
+        "type": "object",
+        "required": [
+          "foo"
+        ],
+        "properties": {
+          "foo": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OnlyPatternedPropsObject": {
+        "type": "object",
+        "patternProperties": {
+          "string_.*": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TupleTest": {
+        "type": "array",
+        "items": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "string"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "foo"
+            ],
+            "properties": {
+              "foo": {
+                "type": "string"
+              },
+              "bar": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "TupleNamedTest": {
+        "type": "array",
+        "items": [
+          {
+            "type": "integer",
+            "x-ogen-name": "Integer"
+          },
+          {
+            "type": "boolean",
+            "x-ogen-name": "Boolean"
+          },
+          {
+            "type": "string"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "foo"
+            ],
+            "properties": {
+              "foo": {
+                "type": "string"
+              },
+              "bar": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "TestInlineOneOf": {
+        "type": "object",
+        "properties": {
+          "inline_discriminator": {
+            "$ref": "#/components/schemas/InlineDiscriminatorOneOf"
+          },
+          "merge_discriminator": {
+            "$ref": "#/components/schemas/MergeDiscriminatorOneOf"
+          },
+          "inline_unique_fields": {
+            "$ref": "#/components/schemas/InlineUniqueFieldsOneOf"
+          },
+          "merge_unique_fields": {
+            "$ref": "#/components/schemas/MergeUniqueFieldsOneOf"
+          }
+        }
+      },
+      "InlineDiscriminatorOneOf": {
+        "type": "object",
+        "required": [
+          "common"
+        ],
+        "properties": {
+          "common": {
+            "type": "string"
+          }
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/InlineOneOfFoo"
+          },
+          {
+            "$ref": "#/components/schemas/InlineOneOfBar"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "kind",
+          "mapping": {
+            "foo": "#/components/schemas/InlineOneOfFoo",
+            "bar": "#/components/schemas/InlineOneOfBar"
+          }
+        }
+      },
+      "MergeDiscriminatorOneOf": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "common"
+            ],
+            "properties": {
+              "common": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/InlineOneOfFoo"
+              },
+              {
+                "$ref": "#/components/schemas/InlineOneOfBar"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "kind",
+              "mapping": {
+                "foo": "#/components/schemas/InlineOneOfFoo",
+                "bar": "#/components/schemas/InlineOneOfBar"
+              }
+            }
+          }
+        ]
+      },
+      "InlineUniqueFieldsOneOf": {
+        "type": "object",
+        "required": [
+          "common"
+        ],
+        "properties": {
+          "common": {
+            "type": "string"
+          }
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/InlineOneOfFoo"
+          },
+          {
+            "$ref": "#/components/schemas/InlineOneOfBar"
+          }
+        ]
+      },
+      "MergeUniqueFieldsOneOf": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "common"
+            ],
+            "properties": {
+              "common": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/InlineOneOfFoo"
+              },
+              {
+                "$ref": "#/components/schemas/InlineOneOfBar"
+              }
+            ]
+          }
+        ]
+      },
+      "InlineOneOfFoo": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "foo": {
+            "type": "string"
+          }
+        }
+      },
+      "InlineOneOfBar": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "bar": {
+            "type": "string"
+          }
+        }
+      },
+      "Issue1310": {
+        "description": "An API error",
+        "type": "object",
+        "properties": {
+          "title": {
+            "description": "A short, human-readable summary of the problem type. This value should not change between occurrences of the error.",
+            "example": "Bad Request",
+            "type": "string"
+          },
+          "details": {
+            "description": "A human-readable explanation specific to this occurrence of the problem.",
+            "example": "Property foo is required but is missing.",
+            "type": "string"
+          },
+          "properties": {
+            "description": "Optional map of properties",
+            "nullable": true,
+            "type": "object"
+          }
+        }
+      },
+      "Issue1461": {
+        "type": "object",
+        "properties": {
+          "requiredTest": {
+            "type": "object",
+            "required": [
+              "banana"
+            ],
+            "properties": {
+              "banana": {
+                "type": "array",
+                "minItems": 2,
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "optionalTest": {
+            "type": "object",
+            "properties": {
+              "banana": {
+                "type": "array",
+                "minItems": 2,
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "nullableTest": {
+            "type": "object",
+            "required": [
+              "banana"
+            ],
+            "properties": {
+              "banana": {
+                "type": "array",
+                "nullable": true,
+                "minItems": 2,
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "nullableOptionalTest": {
+            "type": "object",
+            "properties": {
+              "banana": {
+                "type": "array",
+                "nullable": true,
+                "minItems": 2,
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "parameters": {
+      "defaultQueryParameter": {
+        "name": "default",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "format": "int32",
+          "default": 10
+        }
+      },
+      "skipParam": {
+        "name": "skip",
+        "in": "query",
+        "description": "number of items to skip",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "limitParam": {
+        "name": "limit",
+        "in": "query",
+        "description": "max records to return",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "requestBodies": {
+      "PetCreate": {
+        "description": "pet to add to the system",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Pet"
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "PetResponse": {
+        "description": "A pet.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Pet"
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Entity not found."
+      },
+      "IllegalInput": {
+        "description": "Illegal input for operation."
+      },
+      "Error": {
+        "description": "General Error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "api_key": {
+        "type": "apiKey",
+        "name": "Api_key",
+        "in": "header"
+      },
+      "petstore_auth": {
+        "type": "oauth2",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "http://example.org/api/oauth/dialog",
+            "scopes": {
+              "write:pets": "modify pets in your account",
+              "read:pets": "read your pets"
+            }
+          }
+        }
+      }
+    }
+  }
+}

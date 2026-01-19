@@ -1,0 +1,234 @@
+openapi: 3.0.0
+info:
+  title: title
+  version: v0.1.0
+paths:
+  "/simpleInteger":
+    post:
+      operationId: simpleInteger
+      description: Simple integers with validation.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+              - type: integer
+                minimum: -5
+              - type: integer
+                minimum: -10
+                maximum: 5
+      responses:
+        '200':
+          description: ok
+  "/nullableStrings":
+    post:
+      operationId: nullableStrings
+      description: Nullable strings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+              - type: string
+                description: IP address
+                pattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$'
+              - type: string
+                nullable: true
+      responses:
+        '200':
+          description: ok
+  "/stringsNotype":
+    post:
+      operationId: stringsNotype
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+              - nullable: true
+              - maxLength: 15
+              - type: string
+      responses:
+        '200':
+          description: ok
+  "/simpleObjects":
+    post:
+      operationId: simpleObjects
+      description: Simple objects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+              - type: object
+                properties:
+                  foo:
+                    type: string
+              - type: object
+                properties:
+                  bar:
+                    type: boolean
+      responses:
+        '200':
+          description: ok
+  "/objectsWithConflictingProperties":
+    post:
+      operationId: objectsWithConflictingProperties
+      description: Objects with conflicting properties
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+              - type: object
+                required:
+                - foo
+                properties:
+                  foo:
+                    type: string
+                  bar:
+                    type: integer
+                    minimum: 1
+                    maximum: 255
+              - type: object
+                properties:
+                  foo:
+                    type: string
+                    minLength: 10
+      responses:
+        '200':
+          description: ok
+  "/objectsWithConflictingArrayProperty":
+    post:
+      operationId: objectsWithConflictingArrayProperty
+      description: Objects with conflicting array property
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+              - type: object
+                required:
+                - foo
+                - bar
+                properties:
+                  foo:
+                    type: array
+                    items:
+                      type: integer
+                    minItems: 1
+                  bar:
+                    type: integer
+                    minimum: 1
+                    maximum: 255
+              - type: object
+                properties:
+                  foo:
+                    type: array
+                    items:
+                      type: integer
+                    maxItems: 5
+      responses:
+        '200':
+          description: ok
+  "/referencedAllof":
+    post:
+      operationId: referencedAllof
+      description: referenced allOf
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Robot"
+          multipart/form-data:
+            schema:
+              "$ref": "#/components/schemas/Robot"
+      responses:
+        '200':
+          description: ok
+  "/referencedAllofOptional":
+    post:
+      operationId: referencedAllofOptional
+      description: referenced allOf, but requestBody is not required
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Robot"
+          multipart/form-data:
+            schema:
+              "$ref": "#/components/schemas/Robot"
+      responses:
+        '200':
+          description: ok
+  "/referencedAllOfNullable":
+    post:
+      operationId: referencedAllOfNullable
+      description: referenced allOf, but requestBody contains nullable refs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ReferencedAllOfNullable"
+          multipart/form-data:
+            schema:
+              "$ref": "#/components/schemas/ReferencedAllOfNullable"
+      responses:
+        '200':
+          description: ok
+components:
+  schemas:
+    Robot:
+      allOf:
+      - type: object
+        required:
+        - state
+        properties:
+          state:
+            type: string
+            enum:
+            - 'on'
+            - 'off'
+      - "$ref": "#/components/schemas/WorldObject"
+    Location:
+      type: object
+      required:
+      - lat
+      - lon
+      properties:
+        lat:
+          type: number
+        lon:
+          type: number
+    WorldObject:
+      type: object
+      required:
+      - id
+      - location
+      properties:
+        id:
+          type: string
+          format: uuid
+        location:
+          "$ref": "#/components/schemas/Location"
+    ReferencedAllOfNullable:
+      type: object
+      properties:
+        location:
+          "$ref": "#/components/schemas/Location"
+        allOfLocation:
+          type: object
+          allOf:
+            - "$ref": "#/components/schemas/Location"
+        nullableAllOfLocation:
+          type: object
+          nullable: true
+          allOf:
+            - "$ref": "#/components/schemas/Location"

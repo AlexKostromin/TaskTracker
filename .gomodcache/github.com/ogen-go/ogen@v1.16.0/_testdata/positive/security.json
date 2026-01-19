@@ -1,0 +1,112 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "API",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/optionalSecurity": {
+      "get": {
+        "operationId": "optionalSecurity",
+        "security": [
+          {},
+          {
+            "queryKey": ["admin"]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/disjointSecurity": {
+      "get": {
+        "operationId": "disjointSecurity",
+        "security": [
+          {
+            "basicAuth": [],
+            "queryKey": []
+          },
+          {
+            "cookieKey": [],
+            "headerKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/intersectSecurity": {
+      "get": {
+        "operationId": "intersectSecurity",
+        "security": [
+          {
+            "basicAuth": [],
+            "headerKey": []
+          },
+          {
+            "bearerToken": [],
+            "headerKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/customSecurity": {
+      "get": {
+        "operationId": "customSecurity",
+        "security": [
+          {
+            "custom": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "queryKey": {
+        "type": "apiKey",
+        "in": "query",
+        "name": "api_key"
+      },
+      "headerKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-Api-Key"
+      },
+      "cookieKey": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "api_key"
+      },
+      "basicAuth": {
+        "type": "http",
+        "scheme": "basic"
+      },
+      "bearerToken": {
+        "type": "http",
+        "scheme": "bearer"
+      },
+      "custom": {
+        "type": "http",
+        "scheme": "digest",
+        "x-ogen-custom-security": true
+      }
+    }
+  }
+}

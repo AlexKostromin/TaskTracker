@@ -8,6 +8,7 @@ import (
 
 	"log"
 
+	models "github.com/AlexKostromin/TaskTracker/internal/tracker/domain"
 	trackerV1 "github.com/AlexKostromin/TaskTracker/shared/pkg/openapi/tracker/v1"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -17,26 +18,22 @@ type Server struct {
 	router   *chi.Mux
 	httpPort string
 	server   *http.Server
-	trackerV1.UnimplementedHandler
-	storage TrackerProcessor
+	storage  TrackerProcessor
 }
 type TrackerProcessor interface {
-	CreateTracker(ctx context.Context, request *trackerV1.CreateTrackerRequest) (trackerV1.CreateTrackerRes, error)
-	UpdateTracker(ctx context.Context, request *trackerV1.UpdateTrackerRequest, params trackerV1.UpdateTrackerParams) (trackerV1.UpdateTrackerRes, error)
+	CreateTracker(ctx context.Context, request models.CreateTrackerRequest) (models.Tracker, error)
+	UpdateTracker(ctx context.Context, request models.UpdateTrackerRequest, params models.UpdateTrackerParams) (models.Tracker, error)
+	//NewError(ctx context.Context, err error) error
 }
-
-/*func NewOrderHandler(storage OrderStorage) *OrderHandler {
-	return &OrderHandler{
-		storage: storage,
-	}
-}*/
 
 func NewServer(httpPort string, trackerHandler TrackerProcessor) *Server {
 
-	/*storage := mock-postgres.NewOrderStorage()
-	orderService := application.NewOrderService(storage)
-	orderHandler := NewOrderHandler(orderService)*/
-	orderServer, err := trackerV1.NewServer(trackerHandler)
+	s := &Server{
+		httpPort: httpPort,
+		storage:  trackerHandler,
+	}
+
+	trackerServer, err := trackerV1.NewServer(s)
 	if err != nil {
 		log.Fatalf("ошибка создания сервера OpenAPI: %v", err)
 	}
@@ -48,17 +45,14 @@ func NewServer(httpPort string, trackerHandler TrackerProcessor) *Server {
 	r.Use(middleware.Timeout(10 * time.Second))
 
 	// Регистрация маршрутов
-	r.Mount("/", orderServer)
+	r.Mount("/", trackerServer)
 
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("OK"))
 	})
-	s := &Server{
-		router:   r,
-		httpPort: httpPort,
-		/*orderService: orderHandler,*/
-	}
+
+	s.router = r
 
 	return s
 }
@@ -81,18 +75,3 @@ func (s *Server) Shutdown(ctx context.Context) error {
 	}
 	return nil
 }
-
-/*func (s *Server) registerRoutes(r *chi.Mux) {
-	// Регистрация всех обработчиков
-	r.Get("/orders/{id}", s.orderStorage.GetOrder)
-	r.Post("/orders", CreateOrderHandler)
-	r.Post("/orders/{id}/pay", PayOrderHandler)
-	r.Post("/orders/{id}/cancel", CancelOrderHandler)
-
-	// Health check
-	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("OK"))
-	})
-}
-*/

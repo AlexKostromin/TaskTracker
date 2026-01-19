@@ -1,6 +1,6 @@
 package bootstrap
 
 func Configure() *App {
-	app := new(App)
+	app := New()
 	return app
 }
